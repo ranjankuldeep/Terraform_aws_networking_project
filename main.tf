@@ -3,9 +3,13 @@ provider "aws" {
   secret_key = "cyxliuK5CKlxPoqCXU6a/G+MjST1tNJJlaTydk2x"
   access_key = "AKIASDGMDTQPLLC4KRGV"
 }
+variable "vpc-cidr_block" {
+  description = "value of vpc cidr block"
+  type        = string
+}
 //VPC
 resource "aws_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpc-cidr_block
   tags = {
     Name = "my-first-vpc"
   }
@@ -199,6 +203,9 @@ resource "aws_instance" "ec2-public" {
     device_index         = 0
     network_interface_id = aws_network_interface.ec2-nic-public.id
   }
+}
+output "EC2-PUBLIC-IPV4-ADDRESS" {
+  value = aws_instance.ec2-public.public_ip
 }
 resource "aws_eip" "public-eip" {
   instance = aws_instance.ec2-public.id
